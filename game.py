@@ -2,8 +2,13 @@ from openai import OpenAI
 import random
 import re
 import json
+import os
 with open("env.json","r",encoding="utf-8") as environment:
     env=json.load(environment)
+if os.environ.get("API_KEY"):
+    env["api_key"] = os.environ["API_KEY"]
+if os.environ.get("BASE_URL"):
+    env["base_url"] = os.environ["BASE_URL"]
 def setup():
     model_list=env.get("model", ["x-ai/grok-4-fast"] * 8)
     defaultplan={

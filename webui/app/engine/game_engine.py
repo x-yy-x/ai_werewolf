@@ -5,8 +5,14 @@ import json
 import builtins
 from contextlib import contextmanager
 from typing import Optional
+import os
 with open("env.json","r",encoding="utf-8") as environment:
     env=json.load(environment)  # 读取环境配置，包含模型列表与鉴权信息
+# Render 部署时通过环境变量覆盖
+if os.environ.get("API_KEY"):
+    env["api_key"] = os.environ["API_KEY"]
+if os.environ.get("BASE_URL"):
+    env["base_url"] = os.environ["BASE_URL"]
 
 _builtin_print = builtins.print
 _builtin_input = builtins.input

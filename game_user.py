@@ -2,8 +2,13 @@ from openai import OpenAI
 import random
 import re
 import json
+import os
 with open("env.json","r",encoding="utf-8") as environment:
     env=json.load(environment)  # 读取环境配置，包含模型列表与鉴权信息
+if os.environ.get("API_KEY"):
+    env["api_key"] = os.environ["API_KEY"]
+if os.environ.get("BASE_URL"):
+    env["base_url"] = os.environ["BASE_URL"]
 def setup():
     """初始化全部角色信息、策略模板以及全局状态。"""
     # 读取 env.json 中可用模型列表，缺省时回退到 8 个默认模型
