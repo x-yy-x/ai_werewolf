@@ -6,13 +6,24 @@ import builtins
 from contextlib import contextmanager
 from typing import Optional
 import os
-with open("env.json","r",encoding="utf-8") as environment:
-    env=json.load(environment)  # 读取环境配置，包含模型列表与鉴权信息
-# Render 部署时通过环境变量覆盖
+# 优先从环境变量读取，没有则从文件读取
 if os.environ.get("API_KEY"):
-    env["api_key"] = os.environ["API_KEY"]
-if os.environ.get("BASE_URL"):
-    env["base_url"] = os.environ["BASE_URL"]
+    env = {
+        "api_key": os.environ["API_KEY"],
+        "base_url": os.environ.get("BASE_URL", "https://api.deepseek.com"),
+        "enable_user": True,
+        "model": [os.environ.get("MODEL_NAME", "deepseek-chat")] * 8,
+    }
+else:
+    # 从相对于本文件的路径查找 env.json
+    _base = os.path.dirname(os.path.abspath(__file__))
+    _env_path = os.path.join(_base, "..", "..", "..", "env.json")
+    with open(_env_path, "r", encoding="utf-8") as environment:
+        env = json.load(environment)
+    if os.environ.get("API_KEY"):
+        env["api_key"] = os.environ["API_KEY"]
+    if os.environ.get("BASE_URL"):
+        env["base_url"] = os.environ["BASE_URL"]
 
 _builtin_print = builtins.print
 _builtin_input = builtins.input
