@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import asyncio
 from datetime import datetime
 from pathlib import Path
@@ -18,6 +16,8 @@ app = FastAPI(title="AI Werewolf WebUI", version="1.0.0")
 
 BASE_DIR = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+# 兼容 Python 3.13：禁用 Jinja2 缓存
+templates.env.cache = None
 static_dir = BASE_DIR / "static"
 app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 

@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: ai-werewolf
+    env: python
+    buildCommand: pip install -r webui/requirements.txt
+    startCommand: uvicorn webui.app.main:app --host 0.0.0.0 --port $PORT
